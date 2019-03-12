@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  tasks:
+     - name: "Converting xlsx file to csv undet in /ansible directory"
+       shell: for file in ls -l /ansible/*.xlsx; do xlsx2csv   "${file}" "${file%.xlsx}".csv > /dev/null 2>&1; done
+     - name: "Fetching csv file form the directory"
+       shell: "ls -d /ansible/*.csv"
+       register: csv
+     - include_role:
+          name: servicenow
+       vars:
+          filename: "{{item}}"
+       with_items:
+          - "{{csv.stdout_lines}}"
+
+
+
+
+   
